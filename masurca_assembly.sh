@@ -1,14 +1,26 @@
 #!/bin/bash
-# This script is to build the initial genome assembly with PacBio long reads and 
-# and Illumina short reads by using MaSuRCA program. You must ensure the MaSuRCA program
-# has been correctly installed and added to the PATH before running the script.
-# All the parameters need to be set before running the script.
 
 #PBS -N MASURCA
 #PBS -l nodes=1:ppn=24,walltime=320:00:00,vmem=320gb
 #PBS -m bea
 #PBS -M wum5@umail.iu.edu
 
+usage="\nThis script is to build the initial genome assembly with PacBio long reads and \
+and Illumina short reads by using MaSuRCA program. \e[31mEdit the script before use!!!\e[39m \
+You must ensure the MaSuRCA program has been correctly installed and added to the PATH \
+before running the script. All the parameters need to be set before running the script. 
+
+$(basename "$0") [-h] 
+where:
+    -h  show this help text\n"
+
+while getopts ':hs:' option; do
+  case "$option" in
+    h) printf "$usage"
+       exit
+       ;;
+  esac
+done
 
 ## PATH of required programs, need to make sure the binary program and scripts used is executable
 WORKDIR=/N/dc2/projects/solanumgenome/spol/assembly  # the working directory for assembly

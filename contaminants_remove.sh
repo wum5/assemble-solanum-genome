@@ -1,15 +1,28 @@
 #!/bin/bash
-# This script is to remove the potential contaminant scaffolds from the genome assembly,
-# by searching the databases from human, bacteria and virus but retaining the scaffolds
-# that have high similarity to the closely related species. You must ensure the Deconseq 
-# program has been correctly installed and the corresponding databases have been downloaded 
-# before running the script.
 
 #PBS -N Contaminant_RM
 #PBS -l nodes=1:ppn=8,walltime=24:00:00,vmem=128gb
 #PBS -m bea
 #PBS -M wum5@umail.iu.edu
 
+usage="\nThis script is to remove the potential contaminant scaffolds from the genome assembly, \
+by searching the databases from human, bacteria and virus but retaining the scaffolds \
+that have high similarity to the closely related species. \e[31mEdit the script before use!!!\e[39m \
+You must ensure the Deconseq program has been correctly installed and the corresponding \
+databases have been downloaded before running the script. Once the contaminant and retention \
+databases have been set, change 'SetConfig' to 'YES' and rerun the script.
+
+$(basename "$0") [-h] 
+where:
+    -h  show this help text\n"
+
+while getopts ':hs:' option; do
+  case "$option" in
+    h) printf "$usage"
+       exit
+       ;;
+  esac
+done
 
 ## PATH of required programs, need to make sure the binary program and scripts used is executable
 PATH=$PATH:/N/u/wum5/Carbonate/softwares/prinseq-lite-0.20.4
@@ -21,7 +34,7 @@ GENOME=${WORKDIR}'/sapp_1.0/sapp.fa'  ## input genome file
 ## parameters need to be set by the users
 dbs_remove=human,bacteria,viral  ## remove contaminants from human,bacteria and viral
 dbs_retain=solanum  ## retain scaffolds potentially from solanum species
-SetConfig=NO  ## change this to YES if the DeconSeqConfig.pm has been set, otherwise keep it as No
+SetConfig=NO  ## change this to YES if the DeconSeqConfig.pm has been set, otherwise keep it as NO
 ThreadN=8  ## number of CPUs for parallel computing
 
 cd $LIBDIR
