@@ -20,11 +20,9 @@
 ## De novo Assemble Genome
 ##### Assemble genome using MaSuRCA approach
 ```
-sh masurca_assembly.sh -h
 qsub masurca_assembly.sh
 ```
 ##### Remove contaminant scaffolds
 ```
-sh contaminants_remove.sh -h
 qsub contaminants_remove.sh
 ```

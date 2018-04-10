@@ -10,13 +10,13 @@ by searching the databases from human, bacteria and virus but retaining the scaf
 that have high similarity to the closely related species. \e[31mEdit the script before use!!!\e[39m \
 You must ensure the Deconseq program has been correctly installed and the corresponding \
 databases have been downloaded before running the script. Once the contaminant and retention \
-databases have been set, change 'SetConfig' to 'YES' and rerun the script.
+databases have been set, set 'SetConfig=1'  and rerun the script.
 
 $(basename "$0") [-h] 
 where:
     -h  show this help text\n"
 
-while getopts ':hs:' option; do
+while getopts ':h:' option; do
   case "$option" in
     h) printf "$usage"
        exit
@@ -34,7 +34,7 @@ GENOME=${WORKDIR}'/sapp_1.0/sapp.fa'  ## input genome file
 ## parameters need to be set by the users
 dbs_remove=human,bacteria,viral  ## remove contaminants from human,bacteria and viral
 dbs_retain=solanum  ## retain scaffolds potentially from solanum species
-SetConfig=NO  ## change this to YES if the DeconSeqConfig.pm has been set, otherwise keep it as NO
+SetConfig=0  ## change this to YES if the DeconSeqConfig.pm has been set, otherwise keep it as NO
 ThreadN=8  ## number of CPUs for parallel computing
 
 cd $LIBDIR
@@ -43,7 +43,7 @@ sample_names=()
 
 
 ########## Contaminant database ##########
-if [ $SetConfig == 'NO' ]
+if [ $SetConfig -eq 0 ]
 then
 	if [ ! -d deconseq_DB ]; then mkdir deconseq_DB; fi
 	cd deconseq_DB
@@ -86,7 +86,7 @@ fi
 
 
 ########## Retention database (this is for Solanum species; change this to your system) ##########
-if [ $SetConfig == 'NO' && $dbs_retain == 'solanum' ]
+if [ $SetConfig -eq 0 && $dbs_retain == 'solanum' ]
 then
 	## S.lycopersicum
 	wget ftp://ftp.solgenomics.net/genomes/Solanum_lycopersicum/annotation/ITAG2.4_release/S_lycopersicum_chromosomes.2.50.fa.gz
@@ -109,7 +109,7 @@ fi
 
 
 ########## Prepare the searching databases ########## 
-if [ $SetConfig == 'NO' ]
+if [ $SetConfig -eq 0 ]
 then
 	echo $sample_names
 
@@ -154,7 +154,7 @@ fi
 #use constant DB_DEFAULT => 'human';
 
 ## exit the script/job if the DeconSeqConfig.pm has not yet been set
-if [ $SetConfig == 'NO' ]; then echo "DeconSeqConfig.pm has not yet been set" && exit; fi
+if [ $SetConfig -eq 0 ]; then echo "DeconSeqConfig.pm has not yet been set" && exit; fi
 
 
 ########## run DeconSeq to remove contaminants ########## 
