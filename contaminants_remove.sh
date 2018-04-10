@@ -16,7 +16,7 @@ $(basename "$0") [-h]
 where:
     -h  show this help text\n"
 
-while getopts ':h:' option; do
+while getopts ':h' option; do
   case "$option" in
     h) printf "$usage"
        exit
