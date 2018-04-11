@@ -20,7 +20,6 @@ where:
 ###################################### USER DEFINED AREA ###########################################
 ## PATH of required programs, need to make sure the binary program and scripts used is executable
 PATH=$PATH:/N/u/wum5/Carbonate/softwares/deconseq-0.4.3    # PATH to prinseq
-LIBDIR=/N/dc2/projects/solanumgenome/library  # the directory for preparing searching datasets
 WORKDIR=/N/dc2/projects/solanumgenome/sapp/drafts  # the directory for searching contaminants
 GENOME=/N/dc2/projects/solanumgenome/sapp/drafts/sapp_1.0/sapp.fa  # input genome file
 
