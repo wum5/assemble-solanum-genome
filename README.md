@@ -10,7 +10,7 @@
 * This repository is to record the scripts to assemble and annotate some plant genomes in the genus Solanum. 
 * The scripts are aimed to be reproducible that can be used in other plant genome projects. 
 * Detailed information of how to run each step are recorded in the corresponding bash script (use -h to see).
-* You need to edit the parameters and program PATH in each script before use.
+* You need to edit the parameters and program PATH in each script at "USER DEGINED AREA" before use.
 * We are still updating the scripts and this pipeline! 
 
 ## Contributors 
