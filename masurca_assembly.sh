@@ -12,7 +12,26 @@ before running the script. All the parameters need to be set before running the 
 
 $(basename "$0") [-h] 
 where:
-    -h  show this help text\n"
+    -h  show this help text\n\n"
+
+
+###################################### USER DEFINED AREA ###########################################
+######## PATH of required programs (the binary program and scripts used should be executable) ########
+WORKDIR=/N/dc2/projects/solanumgenome/spol/assembly  # the working directory for assembly
+CONFIGFILE=config_spol.txt  # masurca config file (it should be in the working directory)
+PATH=$PATH:/N/u/wum5/Carbonate/softwares/masucra-3.2.2/bin  # PATH to masucra binary files
+
+######## Parameters setting (leave it blank if you don't have) ########
+PACBIO=/N/dc2/projects/solanumgenome/spol/reads/pac/all_subreads.fa  # PATH to pacbio reads
+JUMP=  # PATH to mate paired (jump) Illumia reads
+## PE = two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq
+PE="pe[s]180[s]35[s]/N/dc2/projects/solanumgenome/spol/reads/illumina/raw/malfempool_R1.fq[s]/N/dc2/projects/solanumgenome/spol/reads/illumina/raw/malfempool_R2.fq"  # here I split those inputs by "[s]"
+OTHER=  # PATH to the file with other information
+NUM_THREADS=24  # number of cpus for parallel processing 
+KMER_COUNT=2  # default=1, increase to 2 if illumina coverage >100
+JF_SIZE=3000000000  # a safe value to be estimated_genome_size*estimated_coverage
+####################################################################################################
+
 
 while getopts ':h' option; do
   case "$option" in
@@ -21,25 +40,6 @@ while getopts ':h' option; do
        ;;
   esac
 done
-
-## PATH of required programs, need to make sure the binary program and scripts used is executable
-WORKDIR=/N/dc2/projects/solanumgenome/spol/assembly  # the working directory for assembly
-CONFIGFILE=config_spol.txt  # masurca config file (it should be in the working directory)
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/masucra-3.2.2/bin
-DATADIR=/N/dc2/projects/solanumgenome/spol/reads
-cd $WORKDIR
-
-
-######## Parameters setting (leave it blank if you don't have) ########
-PACBIO=${DATADIR}"/pac/all_subreads.fa"  # PATH to pacbio reads
-JUMP=  # PATH to mate paired (jump) Illumia reads
-# PE = two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq
-PE="pe[s]180[s]35[s]"${DATADIR}"/illumina/raw/malfempool_R1.fq[s]"${DATADIR}"/illumina/raw/malfempool_R2.fq"  # here I split those inputs by "[s]"
-OTHER=  # PATH to the file with other information
-
-NUM_THREADS=24  # number of cpus for parallel processing 
-KMER_COUNT=2  # default=1, increase to 2 if illumina coverage >100
-JF_SIZE=3000000000  # a safe value to be estimated_genome_size*estimated_coverage
 
 
 ######### A function to edit CONFIG file ######### 
@@ -53,6 +53,7 @@ sed -i 's/\[s\]/ /g' $CONFIGFILE
 
 
 ######### Edit the config file of MaSuRCA #########
+cd $WORKDIR
 set_config ${CONFIGFILE} "PACBIO" ${PACBIO}
 set_config ${CONFIGFILE} "JUMP" ${JUMP}
 set_config ${CONFIGFILE} "OTHER" ${OTHER}

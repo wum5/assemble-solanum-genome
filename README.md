@@ -24,5 +24,6 @@ qsub masurca_assembly.sh
 ```
 ##### Remove contaminant scaffolds
 ```
+qsub contaminants_dbbuild.sh  (skip this step if you have deconseq databases set)
 qsub contaminants_remove.sh
 ```
