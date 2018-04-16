@@ -1,44 +1,78 @@
 #!/bin/bash
+# a bash script to assemble genome using MaSuRCA 
 
-#PBS -N MASURCA
-#PBS -l nodes=1:ppn=24,walltime=320:00:00,vmem=320gb
-#PBS -m bea
-#PBS -M wum5@umail.iu.edu
 
-usage="\nThis script is to build the initial genome assembly with PacBio long reads and \
-and Illumina short reads by using MaSuRCA program. \e[31mEdit the script before use!!!\e[39m \
-You must ensure the MaSuRCA program has been correctly installed and added to the PATH \
-before running the script. All the parameters need to be set before running the script. 
+function usage(){
+printf "\nThis script is to build the initial genome assembly with PacBio long reads and \
+and Illumina short reads by using MaSuRCA program. You must ensure the MaSuRCA program has \
+been correctly installed and added to the PATH before running the script. 
 
 $(basename "$0") [-h] 
 where:
-    -h  show this help text\n\n"
+    -h  show this help text
+    -d  the working directory for assembly
+    -c  PATH to masurca config file 
+    -P  PATH to pacbio reads
+    -p  two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq (paired-end reads)
+    -j  two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq (mate-paired reads; optional)
+    -O  PATH to the file with other information (optional)
+    -T  number of cpus for parallel processing (default=16)
+    -K  increase to 2 if illumina coverage >100 (default=1)
+    -J  a safe value to be estimated_genome_size*estimated_coverage (default=1000000000)\n\n"
+}
 
 
-###################################### USER DEFINED AREA ###########################################
-######## PATH of required programs (the binary program and scripts used should be executable) ########
-WORKDIR=/N/dc2/projects/solanumgenome/spol  # the working directory for assembly
-CONFIGFILE=config_spol.txt  # masurca config file (it should be in the working directory)
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/masucra-3.2.2/bin  # PATH to masucra binary files
-
-######## Parameters setting (leave it blank if you don't have) ########
-PACBIO=/N/dc2/projects/solanumgenome/spol/reads/pac/all_subreads.fa  # PATH to pacbio reads
-JUMP=  # PATH to mate paired (jump) Illumia reads
-PE="pe 180 35 /N/dc2/projects/solanumgenome/spol/reads/illumina/raw/malfempool_R1.fq /N/dc2/projects/solanumgenome/spol/reads/illumina/raw/malfempool_R2.fq"  # PE = two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq
-OTHER=  # PATH to the file with other information
-NUM_THREADS=24  # number of cpus for parallel processing 
-KMER_COUNT=2  # default=1, increase to 2 if illumina coverage >100
-JF_SIZE=3000000000  # a safe value to be estimated_genome_size*estimated_coverage
-####################################################################################################
+######### Default parameters #########
+WORKDIR=''  
+CONFIGFILE=''  
+PACBIO=''
+PE=''
+JUMP='' 
+OTHER=''
+NUM_THREADS=16
+KMER_COUNT=1
+JF_SIZE=1000000000 
 
 
-while getopts ':h' option; do
+######### Parse input #########
+while getopts 'h:d:c:P:p:j:O:n:K:J' option; do
   case "$option" in
-    h) printf "$usage"
+    h) usage
        exit
+       ;;
+    d) WORKDIR=${OPTARG}
+       ;;
+    c) CONFIGFILE=${OPTARG}
+       ;;
+    P) PACBIO=${OPTARG}
+       ;;
+    p) PE=${OPTARG}
+       ;;
+    j) JUMP=${OPTARG}
+       ;;
+    O) OTHER=${OPTARG}
+       ;;
+    n) NUM_THREADS=${OPTARG}
+       ;;
+    K) KMER_COUNT=${OPTARG}
+       ;;
+    J) JF_SIZE=${OPTARG}
        ;;
   esac
 done
+shift $((OPTIND-1))
+
+
+if [ -z "${WORKDIR}" ] || [ -z "${CONFIGFILE}" ] || [ -z "${PACBIO}" ] || [ -z "${PE}" ] ; then
+    usage
+    exit
+fi
+
+if [ $(echo "${PE}" | wc -w) != 5 ]; then 
+    usage
+    exit
+fi
+
 
 
 ######### A function to edit CONFIG file ######### 
@@ -47,7 +81,6 @@ CONFIGFILE=$1
 TARGET_KEY=$2
 REPLACEMENT_VALUE=$3
 sed -i "s|^\($TARGET_KEY\s*=\s*\).*\$|\1$REPLACEMENT_VALUE|" $CONFIGFILE
-sed -i 's/\[s\]/ /g' $CONFIGFILE
 }
 
 
@@ -68,6 +101,6 @@ sed -i '/=$/ d' ${CONFIGFILE}
 
 
 ######### Run MasuRCA #########
-#masurca config_spol.txt
-#./assemble.sh
+masurca config_spol.txt
+./assemble.sh
 
