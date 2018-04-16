@@ -13,10 +13,10 @@ where:
     -d  the working directory for assembly
     -c  PATH to masurca config file 
     -P  PATH to pacbio reads
-    -p  two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq (paired-end reads)
-    -j  two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq (mate-paired reads; optional)
+    -p  'two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq' (paired-end reads)
+    -j  'two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq' (mate-paired reads; optional)
     -O  PATH to the file with other information (optional)
-    -T  number of cpus for parallel processing (default=16)
+    -n  number of cpus for parallel processing (default=16)
     -K  increase to 2 if illumina coverage >100 (default=1)
     -J  a safe value to be estimated_genome_size*estimated_coverage (default=1000000000)\n\n"
 }
@@ -57,6 +57,9 @@ while getopts 'h:d:c:P:p:j:O:n:K:J' option; do
     K) KMER_COUNT=${OPTARG}
        ;;
     J) JF_SIZE=${OPTARG}
+       ;;
+    *) usage
+       exit
        ;;
   esac
 done

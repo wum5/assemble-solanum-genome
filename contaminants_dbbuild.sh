@@ -1,16 +1,13 @@
 #!/bin/bash
-
-#PBS -N Contaminant_DB
-#PBS -l nodes=1:ppn=8,walltime=24:00:00,vmem=128gb
-#PBS -m bea
-#PBS -M wum5@umail.iu.edu
+# a bash script to build the databases for Deconseq search 
 
 
-usage="\nThis script is to set the databases for contaminant scaffold searching. \
+function usage(){
+printf "\nThis script is to set the databases for contaminant scaffold searching. \
 The contaminant datasets (bacteria, virus and human genome) are downloaded from NCBI \
 and constructed into database. You must ensure 'Prinseq' and 'Deconseq' program has been \
 correctly installed. Here we used Solanum genomes as retention database. You need to \
-change the module 'retain_db' in the code to down your specific retention database. \
+add the module 'retain_db' in the code to download your specific retention database. \
 \
 \n\n\e[31mAfter running this script, you need to edit the DeconSeqConfig.pm in the 'deconseq' \
 software folder (example below):\e[39m \
@@ -22,7 +19,7 @@ software folder (example below):\e[39m \
 \nuse constant DBS => {human => {name => 'Human Reference GRCh38', \
 \n                               db => 'human'}, \
 \n                     bact => {name => 'Bacterial genomes', \
-\n                              db => 'bacteria_c1,bacteria_c2,bacteria_c3,bacteria_c4,bacteria_c5, bacteria_c6,bacteria_c7,bacteria_c8,bacteria_c9,bacteria_c10'},\n \
+\n                              db => 'bacteria_c1,bacteria_c2,bacteria_c3,bacteria_c4,bacteria_c5,bacteria_c6,bacteria_c7,bacteria_c8,bacteria_c9,bacteria_c10'},\n \
 \n                     vir => {name => 'Viral genomes', \
 \n                             db => 'viral'}, \
 \n                     solanum => {name => 'Solanum genomes', \
@@ -31,25 +28,39 @@ software folder (example below):\e[39m \
 
 $(basename "$0") [-h] 
 where:
-    -h  show this help text\n\n"
+    -h  show this help text
+    -d  PATH to the directory for preparing searching datasets
+    -n  number of CPUs for parallel computing (default=16)\n\n"
+}
 
 
-###################################### USER DEFINED AREA ###########################################
-## PATH of required programs, need to make sure the binary program and scripts used is executable
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/prinseq-lite-0.20.4  # PATH to prinseq
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/deconseq-0.4.3  # PATH to deconseq
-LIBDIR=/N/dc2/projects/solanumgenome/library  # the directory for preparing searching datasets
-ThreadN=8  # number of CPUs for parallel computing
-####################################################################################################
+######### Default parameters #########
+LIBDIR=''
+ThreadN=16  
 
 
-while getopts ':h' option; do
+######### Parse input #########
+while getopts 'h:d:n' option; do
   case "$option" in
-    h) printf "$usage"
+    h) usage
        exit
        ;;
+    d) LIBDIR=${OPTARG}
+       ;;
+    n) ThreadN=${OPTARG}
+       ;;
+    *) usage
+       exit
   esac
 done
+shift $((OPTIND-1))
+
+
+if [ -z "${LIBDIR}" ] ; then
+    usage
+    exit
+fi
+
 
 
 ########## Contaminant database ##########

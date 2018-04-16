@@ -21,15 +21,22 @@
 ## De novo Assemble Genome
 ##### Assemble genome using MaSuRCA approach
 ```
-qsub masurca_assembly.sh
+./masurca_assembly.sh -d <working dir> -c <masurca configfile> -P <PacBio reads> \
+-p <"pair-ended reads information"> -n 16 -K 2 -J 3000000000
+```
+##### Build contaminant databases (skip this step if you have deconseq databases set)
+```
+./contaminants_dbbuild.sh -d <working dir> -n 16
 ```
 ##### Remove contaminant scaffolds
 ```
-qsub contaminants_dbbuild.sh  (skip this step if you have deconseq databases set)
-qsub contaminants_remove.sh
+./contaminants_remove.sh -d <working dir> -g <genome file> -r <retention database> \
+-R human,bacteria,viral -n 16 -i 80 -c 50
 ```
 ## Genome Annotation
 ##### Prepare species-specific repeats library
 ```
-qsub repeats_annotation.sh
+./repeats_annotation.sh -d <working dir> -g <genome file> -T <Tpases020812DNA> \
+-P <alluniRefprexp070416> -n 16 -S 123 
 ```
+

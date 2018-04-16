@@ -1,53 +1,70 @@
 #!/bin/bash
-
-#PBS -N REPEAT-ANNOT
-#PBS -l nodes=1:ppn=16,walltime=128:00:00,vmem=128gb
-#PBS -m bea
-#PBS -M wum5@umail.iu.edu
+# a bash script to build species-specific repeats library
 
 
-usage="\nThis script is to prepare species-specific library before performing gene \
-annotation. \e[31mEdit the script at USER DEFINED AREA before use!!!\e[39m \
-For example, you can control the steps need to be processed by editing the 'ProcStep'. \
+function usage(){
+printf "\nThis script is to prepare species-specific library before performing gene \
+annotation. You can control the steps need to be processed by editing the flag '-S'. \
 You must also ensure the following programs have been correctly installed and added \
 into PATH: MITE-hunter, LTR-harvest, LTR-retriever, Repeat-Modeler, Repeat-Masker, \
-Deconseq, CD-HIT, Hmmer, Blast and ProtExcluder. 
+Deconseq, CD-HIT, Hmmer, Blast and ProtExcluder. The files 'Tpases020812DNA' and \
+'alluniRefprexp070416' can be downloaded from the website here: \
+http://weatherby.genetics.utah.edu/MAKER/wiki/index.php/Repeat_Library_Construction-Advanced.
 
 $(basename "$0") [-h] 
 where:
-    -h  show this help text\n\n"
+    -h  show this help text
+    -d  PATH to the working directory for assembly
+    -g  the input genome fasta file
+    -T  the DNA transposase protein file (Tpases020812DNA)
+    -P  the plant protein database (alluniRefprexp070416)
+    -n  number of cpus for parallel processing (default=16)
+    -S  the steps to processed (default=1234): 1: Mite search; 2: LTR search; 3: Repeat-Modeler; 4: Final Processing\n\n"
+}
 
-while getopts ':h' option; do
+
+######### Default parameters #########  
+WORKDIR=''
+seqfile=''
+fileindex=''
+transposase=''
+plantprot=''
+ThreadN=16 
+ProcStep=1234 
+
+
+######### Parse input #########
+while getopts 'h:d:g:i:T:P:n:S' option; do
   case "$option" in
-    h) printf "$usage"
+    h) usage
        exit
        ;;
+    d) WORKDIR=${OPTARG}
+       ;;
+    g) seqfile=${OPTARG}
+       ;;
+    i) fileindex=${OPTARG}
+       ;;
+    T) transposase=${OPTARG}
+       ;;
+    P) plantprot=${OPTARG}
+       ;;
+    n) ThreadN=${OPTARG}
+       ;;
+	S) ProcStep=${OPTARG}
+	   ;;
+	*) usage
+	   exit
+	   ;;
   esac
 done    
+shift $((OPTIND-1))
 
 
-###################################### USER DEFINED AREA ###########################################    
-## PATH of required programs, need to make sure the binary program and scripts used is executable
-module load hmmer/3.1  # PATH to hmmer
-module load cd-hit/4.6.8   # PATH to cd-hit
-module load repeatmasker/4.0.7  # PATH to repeatmasker
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/mite-hunter  # PATH to mite-hunter 
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/ltr_retriever  # PATH to ltr-retriever
-PATH=$PATH:/N/u/wum5/Mason/bin/gt/bin   # PATH to ltr-harvest
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/deconseq-0.4.3  # PATH to deconseq
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/crl-scripts-1.0  # PATH to CRL scripts used for repeat annotation
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/repeat-modeler-1.0.11  # PATH to repeatmodeler
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/ncbi-blast-2.7.1+/bin  # PATH to blast 
-PATH=$PATH:/N/u/wum5/Carbonate/softwares/ProtExcluder1.2  # PATH to ProtExcluder
-
-WORKDIR=/N/dc2/projects/solanumgenome/sapp/drafts/repeats  # the working directory for assembly
-seqfile=sapp_clean.fa  # the genome fasta file
-transposase=/N/dc2/projects/solanumgenome/library/TE_proteins/Tpases020812DNA  # DNA transposase protein
-plantprot=/N/dc2/projects/solanumgenome/library/TE_proteins/alluniRefprexp070416  # Plant protein database
-fileindex=sapp  # genome index name
-ThreadN=16  # number of cpus for parallel processing 
-ProcStep=1234  # steps being processed. S1: Mite search; S2: LTR search; S3: Repeat-Modeler; S4: RepeatMasker
-####################################################################################################
+if [ -z "${WORKDIR}" ] || [ -z "${seqfile}" ] || [ -z "${fileindex}" ] || [ -z "${transposase}" ] || [ -z "${plantprot}" ] ; then
+    usage
+    exit
+fi
 
 
 
