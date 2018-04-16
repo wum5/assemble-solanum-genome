@@ -17,15 +17,14 @@ where:
 
 ###################################### USER DEFINED AREA ###########################################
 ######## PATH of required programs (the binary program and scripts used should be executable) ########
-WORKDIR=/N/dc2/projects/solanumgenome/spol/assembly  # the working directory for assembly
+WORKDIR=/N/dc2/projects/solanumgenome/spol  # the working directory for assembly
 CONFIGFILE=config_spol.txt  # masurca config file (it should be in the working directory)
 PATH=$PATH:/N/u/wum5/Carbonate/softwares/masucra-3.2.2/bin  # PATH to masucra binary files
 
 ######## Parameters setting (leave it blank if you don't have) ########
 PACBIO=/N/dc2/projects/solanumgenome/spol/reads/pac/all_subreads.fa  # PATH to pacbio reads
 JUMP=  # PATH to mate paired (jump) Illumia reads
-## PE = two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq
-PE="pe[s]180[s]35[s]/N/dc2/projects/solanumgenome/spol/reads/illumina/raw/malfempool_R1.fq[s]/N/dc2/projects/solanumgenome/spol/reads/illumina/raw/malfempool_R2.fq"  # here I split those inputs by "[s]"
+PE="pe 180 35 /N/dc2/projects/solanumgenome/spol/reads/illumina/raw/malfempool_R1.fq /N/dc2/projects/solanumgenome/spol/reads/illumina/raw/malfempool_R2.fq"  # PE = two_letter_prefix mean stdev /PATH/fwd_reads.fastq /PATH/rev_reads.fastq
 OTHER=  # PATH to the file with other information
 NUM_THREADS=24  # number of cpus for parallel processing 
 KMER_COUNT=2  # default=1, increase to 2 if illumina coverage >100
@@ -54,20 +53,21 @@ sed -i 's/\[s\]/ /g' $CONFIGFILE
 
 ######### Edit the config file of MaSuRCA #########
 cd $WORKDIR
-set_config ${CONFIGFILE} "PACBIO" ${PACBIO}
-set_config ${CONFIGFILE} "JUMP" ${JUMP}
-set_config ${CONFIGFILE} "OTHER" ${OTHER}
-set_config ${CONFIGFILE} "PE" ${PE}
 
-set_config ${CONFIGFILE} "NUM_THREADS" ${NUM_THREADS}
-set_config ${CONFIGFILE} "KMER_COUNT_THRESHOLD" ${KMER_COUNT}
-set_config ${CONFIGFILE} "JF_SIZE" ${JF_SIZE}
+set_config ${CONFIGFILE} "PACBIO" "$PACBIO"
+set_config ${CONFIGFILE} "JUMP" "$JUMP"
+set_config ${CONFIGFILE} "OTHER" "$OTHER"
+set_config ${CONFIGFILE} "PE" "$PE"
+
+set_config ${CONFIGFILE} "NUM_THREADS" "$NUM_THREADS"
+set_config ${CONFIGFILE} "KMER_COUNT_THRESHOLD" "$KMER_COUNT"
+set_config ${CONFIGFILE} "JF_SIZE" "$JF_SIZE"
 
 sed -i '/= $/ d' ${CONFIGFILE}
 sed -i '/=$/ d' ${CONFIGFILE}
 
 
 ######### Run MasuRCA #########
-masurca config_spol.txt
-./assemble.sh
+#masurca config_spol.txt
+#./assemble.sh
 
