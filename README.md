@@ -5,6 +5,7 @@
 * [Overview](#overview)
 * [Contributors](#contributors)
 * [De novo Asseemble Genome](#de-novo-assemble-genome)
+* [Genome Annotation](#genome-annotation)
 
 ## Overview
 * This repository is to record the scripts to assemble and annotate some plant genomes in the genus Solanum. 
@@ -26,4 +27,9 @@ qsub masurca_assembly.sh
 ```
 qsub contaminants_dbbuild.sh  (skip this step if you have deconseq databases set)
 qsub contaminants_remove.sh
+```
+## Genome Annotation
+##### Prepare species-specific repeats library
+```
+qsub repeats_annotation.sh
 ```
