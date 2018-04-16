@@ -51,6 +51,7 @@ while getopts 'h:d:n' option; do
        ;;
     *) usage
        exit
+       ;;
   esac
 done
 shift $((OPTIND-1))

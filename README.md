@@ -10,8 +10,7 @@
 ## Overview
 * This repository is to record the scripts to assemble and annotate some plant genomes in the genus Solanum. 
 * The scripts are aimed to be reproducible that can be used in other plant genome projects. 
-* Detailed information of how to run each step are recorded in the corresponding bash script (use -h to see).
-* You need to edit the parameters and program PATH in each script at "USER DEFINED AREA" before use.
+* You use -h to see the detailed information of how to run each bash script.
 * We are still updating the scripts and this pipeline! 
 
 ## Contributors 
@@ -19,12 +18,16 @@
 * Rafael Guerrero
 
 ## De novo Assemble Genome
+##### Set the environment to add required programs to PATH
+```
+./set_path.sh
+```
 ##### Assemble genome using MaSuRCA approach
 ```
 ./masurca_assembly.sh -d <working dir> -c <masurca configfile> -P <PacBio reads> \
 -p <"pair-ended reads information"> -n 16 -K 2 -J 3000000000
 ```
-##### Build contaminant databases (skip this step if you have deconseq databases set)
+##### Build contaminant databases (skip this step if you have deconseq databases being set)
 ```
 ./contaminants_dbbuild.sh -d <working dir> -n 16
 ```
@@ -37,6 +40,6 @@
 ##### Prepare species-specific repeats library
 ```
 ./repeats_annotation.sh -d <working dir> -g <genome file> -T <Tpases020812DNA> \
--P <alluniRefprexp070416> -n 16 -S 123 
+-P <alluniRefprexp070416> -n 16 -S 1234 
 ```
 

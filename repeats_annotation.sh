@@ -51,11 +51,11 @@ while getopts 'h:d:g:i:T:P:n:S' option; do
        ;;
     n) ThreadN=${OPTARG}
        ;;
-	S) ProcStep=${OPTARG}
-	   ;;
-	*) usage
-	   exit
-	   ;;
+    S) ProcStep=${OPTARG}
+       ;;
+    *) usage
+       exit
+       ;;
   esac
 done    
 shift $((OPTIND-1))
