@@ -29,13 +29,15 @@
 
 ##### Assemble genome using MaSuRCA approach
 ```
-./masurca_assembly.sh -d <working dir> -c <masurca configfile> -P <PacBio reads> \
--p <"pair-ended reads information"> -n 16 -K 2 -J 3000000000
+masurca -g masurca_config.txt
+masurca masurca_config.txt   # need to manually edit the file to set required parameters then
+
+./assemble.sh
 ```
 
 ##### Build contaminant databases (skip this step if you have deconseq databases being set)
 ```
-./contaminants_dbbuild.sh -d <working dir> -n 16  (need to edit the "DeconSeqConfig.pm" then)
+./contaminants_dbbuild.sh -d <working dir> -n 16   # need to edit the "DeconSeqConfig.pm" then
 ```
 
 ##### Remove contaminant scaffolds
@@ -54,9 +56,10 @@
 
 ##### Annotate genome using MAKER2 pipeline
 ```
-maker -EXE  (need to manually edit the file to get access to PATH of required programs)
+maker -EXE   # need to manually edit the file to get access to PATH of required programs then
 
 ./gene_annotation.sh -d <working dir> -g <genome file> -f <forward RNA-seq> -r <reverse RNA-seq> \
 -p <homologous protein sequences> -t <TE proteins sequences> -R <Repeats library> \
--A <augustus species directory> -B <BUSCO embryophyta directory> -M <maker_exe.ctl> -n 16 -S 1234
+-A <augustus species directory> -B <BUSCO embryophyta directory> -M maker_exe.ctl -n 16 -S 1234
 ```
+
