@@ -29,15 +29,15 @@
 
 ##### Assemble genome using MaSuRCA approach
 ```
-masurca -g masurca_config.txt
-masurca masurca_config.txt   # need to manually edit the file to set required parameters then
+masurca -g masurca_config.txt   # run this command in the working directory
+masurca masurca_config.txt   # need to manually edit "masurca_config" before to set required parameters
 
 ./assemble.sh
 ```
 
 ##### Build contaminant databases (skip this step if you have deconseq databases being set)
 ```
-./contaminants_dbbuild.sh -d <working dir> -n 16   # need to edit the "DeconSeqConfig.pm" then
+./contaminants_dbbuild.sh -d <working dir> -n 16   # need to manually edit "DeconSeqConfig.pm" then
 ```
 
 ##### Remove contaminant scaffolds
