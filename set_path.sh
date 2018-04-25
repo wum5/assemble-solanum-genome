@@ -23,3 +23,17 @@ PATH=$PATH:/N/u/wum5/Carbonate/softwares/crl-scripts-1.0  # PATH to CRL scripts 
 PATH=$PATH:/N/u/wum5/Carbonate/softwares/repeat-modeler-1.0.11  # PATH to repeatmodeler
 PATH=$PATH:/N/u/wum5/Carbonate/softwares/ncbi-blast-2.7.1+/bin  # PATH to blast 
 PATH=$PATH:/N/u/wum5/Carbonate/softwares/ProtExcluder1.2  # PATH to ProtExcluder
+
+
+### Predict gene models by MAKER2
+module load python
+module load bowtie2/intel/2.3.2 
+module load tophat/2.1.1 
+module load trinityrnaseq/2.4.0
+module load maker/2.31.9
+
+PATH=$PATH:/N/u/wum5/Carbonate/softwares/busco/scripts
+PATH=$PATH:/gpfs/home/w/u/wum5/Carbonate/softwares/augustus.2.5.5/bin
+PATH=$PATH:/N/u/wum5/Carbonate/softwares/gm_et_linux_64/gmes_petap
+export AUGUSTUS_CONFIG_PATH=/gpfs/home/w/u/wum5/Carbonate/softwares/augustus.2.5.5/config/
+AUGUSTUS_DB=/gpfs/home/w/u/wum5/Carbonate/softwares/augustus.2.5.5/config/species/

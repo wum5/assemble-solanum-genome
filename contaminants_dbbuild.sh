@@ -26,7 +26,8 @@ software folder (example below):\e[39m \
 \n                             db => 'lyco,tube,penn'}}; \
 \nuse constant DB_DEFAULT => 'human';
 
-$(basename "$0") [-h] 
+$(basename "$0") [-h] [-OPTIONS] -d <working dir> 
+
 where:
     -h  show this help text
     -d  PATH to the directory for preparing searching datasets
@@ -40,7 +41,7 @@ ThreadN=16
 
 
 ######### Parse input #########
-while getopts 'h:d:n' option; do
+while getopts ':h:d:n' option; do
   case "$option" in
     h) usage
        exit

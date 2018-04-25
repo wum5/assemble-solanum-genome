@@ -8,7 +8,8 @@ by searching the databases from human, bacteria and virus but retaining the scaf
 high similarity to the closely related species. You must ensure the Deconseq program has been \
 correctly installed and the corresponding databases have been downloaded before running the script.
 
-$(basename "$0") [-h] 
+$(basename "$0") [-h] [-OPTIONS] -g <genome file> -r <retention database> -R human,bacteria,viral
+
 where:
     -h  show this help text
     -d  PATH to the working directory
@@ -32,7 +33,7 @@ aligncov=50
 
 
 ######### Parse input #########
-while getopts 'h:d:g:R:r:n:i:c' option; do
+while getopts ':h:d:g:R:r:n:i:c' option; do
   case "$option" in
     h) usage
        exit

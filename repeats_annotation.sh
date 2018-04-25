@@ -11,7 +11,9 @@ Deconseq, CD-HIT, Hmmer, Blast and ProtExcluder. The files 'Tpases020812DNA' and
 'alluniRefprexp070416' can be downloaded from the website here: \
 http://weatherby.genetics.utah.edu/MAKER/wiki/index.php/Repeat_Library_Construction-Advanced.
 
-$(basename "$0") [-h] 
+$(basename "$0") [-h] [-OPTIONS] -d <working dir> -g <genome file> -T <Tpases020812DNA> \
+-P <alluniRefprexp070416>
+
 where:
     -h  show this help text
     -d  PATH to the working directory for assembly
@@ -34,7 +36,7 @@ ProcStep=1234
 
 
 ######### Parse input #########
-while getopts 'h:d:g:i:T:P:n:S' option; do
+while getopts ':h:d:g:i:T:P:n:S' option; do
   case "$option" in
     h) usage
        exit

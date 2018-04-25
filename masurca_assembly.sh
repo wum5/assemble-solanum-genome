@@ -7,7 +7,9 @@ printf "\nThis script is to build the initial genome assembly with PacBio long r
 and Illumina short reads by using MaSuRCA program. You must ensure the MaSuRCA program has \
 been correctly installed and added to the PATH before running the script. 
 
-$(basename "$0") [-h] 
+$(basename "$0") [-h] [-OPTIONS] -d <working dir> -c <masurca configfile> -P <PacBio reads> \
+-p <'pair-ended reads information'>
+
 where:
     -h  show this help text
     -d  the working directory for assembly
@@ -35,7 +37,7 @@ JF_SIZE=1000000000
 
 
 ######### Parse input #########
-while getopts 'h:d:c:P:p:j:O:n:K:J' option; do
+while getopts ':h:d:c:P:p:j:O:n:K:J' option; do
   case "$option" in
     h) usage
        exit
