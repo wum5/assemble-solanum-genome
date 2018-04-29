@@ -1,5 +1,7 @@
 #!/bin/bash
-# a bash script to build the databases for Deconseq search 
+set -e
+set -u
+set -o pipefail
 
 
 function usage(){

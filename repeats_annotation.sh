@@ -1,5 +1,7 @@
 #!/bin/bash
-# a bash script to build species-specific repeats library
+set -e
+set -u
+set -o pipefail
 
 
 function usage(){

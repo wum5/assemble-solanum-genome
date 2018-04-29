@@ -1,5 +1,7 @@
 #!/bin/bash
-# a bash script to remove putative contaminants from assembled genome using Deconseq 
+set -e
+set -u
+set -o pipefail
 
 
 function usage(){
