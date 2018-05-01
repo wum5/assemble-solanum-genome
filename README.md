@@ -24,7 +24,7 @@
 ## De novo Assemble Genome
 ##### Set the environment to add required programs to PATH
 ```
-./set_path.sh
+set_path.sh
 ```
 
 ##### Assemble genome using MaSuRCA approach
@@ -32,17 +32,17 @@
 masurca -g masurca_config.txt   # run this command in the working directory
 masurca masurca_config.txt   # need to manually edit "masurca_config" before to set required parameters
 
-./assemble.sh
+assemble.sh
 ```
 
 ##### Build contaminant databases (skip this step if you have deconseq databases being set)
 ```
-./contaminants_dbbuild.sh -d <working dir> -n 16   # need to manually edit "DeconSeqConfig.pm" then
+contaminants_dbbuild.sh -d <working dir> -n 16   # need to manually edit "DeconSeqConfig.pm" then
 ```
 
 ##### Remove contaminant scaffolds
 ```
-./contaminants_remove.sh -d <working dir> -g <genome file> -r <retention database> \
+contaminants_remove.sh -d <working dir> -g <genome file> -r <retention database> \
 -R human,bacteria,viral -n 16 -i 80 -c 50
 ```
 
@@ -50,7 +50,7 @@ masurca masurca_config.txt   # need to manually edit "masurca_config" before to 
 ## Genome Annotation
 ##### Prepare species-specific repeats library
 ```
-./repeats_annotation.sh -d <working dir> -g <genome file> -T <Tpases020812DNA> \
+repeats_annotation.sh -d <working dir> -g <genome file> -T <Tpases020812DNA> \
 -P <alluniRefprexp070416> -n 16 -S 1234 
 ```
 
@@ -58,8 +58,13 @@ masurca masurca_config.txt   # need to manually edit "masurca_config" before to 
 ```
 maker -EXE   # need to manually edit the file to get access to PATH of required programs then
 
-./gene_annotation.sh -d <working dir> -g <genome file> -f <forward RNA-seq> -r <reverse RNA-seq> \
+gene_annotation.sh -d <working dir> -g <genome file> -f <forward RNA-seq> -r <reverse RNA-seq> \
 -p <homologous protein sequences> -t <TE proteins sequences> -R <Repeats library> \
--A <augustus species directory> -B <BUSCO embryophyta directory> -M maker_exe.ctl -n 16 -S 1234
+-B <BUSCO embryophyta directory> -M maker_exe.ctl -n 16 -S 1234
+```
+
+##### Check annotation statistics and pull out coding sequence with AED score <0.5
+```
+annotation_by_aed.py --genome <genome file> --gff <GFF output from MAKER2> --AED 0.5
 ```
 
