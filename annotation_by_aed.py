@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """\n This program is to extract high-confidence gene annotions from MAKER2 \
 output based on the annotation edit distance (AED). AED = 1 - AC, where \
-AC = (SN + SP) / 2. SN = TP / (TP + FN); SP = TP / (TP + FP); """
+AC = (SN + SP) / 2. SN = TP / (TP + FN); SP = TP / (TP + FP); The program \
+gffread must be added into PATH"""
 
 
 import os
