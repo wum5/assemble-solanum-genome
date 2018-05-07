@@ -1,7 +1,5 @@
 ## This file will provide the pipeline with dependent programs.
-## You can leave the respective paths empty if programs are accessible through ENV (i.e. exported to .bashrc)
 ## If you specify a path, please make sure that the required program(s) is directly contained in that path but not in any child directories.
-## e.g. BLAST+=/opt/software/BLAST+/2.2.30--GCC-4.4.5/bin/
 
 
 ### Genome Assembly

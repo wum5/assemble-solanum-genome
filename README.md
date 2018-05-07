@@ -25,6 +25,7 @@
 ##### Set the environment to add required programs to PATH
 ```
 set -a ; source ./paths.txt ; set +a
+PATH=$PATH:$("pwd")
 ```
 
 ##### Assemble genome using MaSuRCA approach
