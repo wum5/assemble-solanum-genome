@@ -8,7 +8,8 @@ function usage(){
 printf "\nThis script is to set the databases for contaminant scaffold searching. \
 The contaminant datasets (bacteria, virus and human genome) are downloaded from NCBI \
 and constructed into database. You must ensure 'Prinseq' and 'Deconseq' program has been \
-correctly installed. Here we used Solanum genomes as retention database. You need to \
+correctly installed and set in the paths file. \
+Here we used Solanum genomes as retention database. You need to \
 add the module 'retain_db' in the code to download your specific retention database. \
 \
 \n\n\e[31mAfter running this script, you need to edit the DeconSeqConfig.pm in the 'deconseq' \
@@ -63,6 +64,12 @@ shift $((OPTIND-1))
 if [ -z "${LIBDIR}" ] ; then
     usage
     exit
+fi
+
+
+if [ -z "${DeconSeq+x}" ] || [ -z "${PrinSeq+x}" ] ; then
+	echo -e '\nSome required program(s) have not yet been set in paths\n'
+	exit
 fi
 
 
@@ -148,11 +155,11 @@ if [ "$sample_names" != '' ]
 then
 echo $sample_names | xargs -n 1 | xargs -P $ThreadN -I{} bash -c 'seq_split {}'
 
-echo $sample_names | xargs -n 1 | xargs -P $ThreadN -I{} -I{} prinseq-lite.pl \
+echo $sample_names | xargs -n 1 | xargs -P $ThreadN -I{} -I{} ${PrinSeq}/prinseq-lite.pl \
 -log -verbose -fasta {}'_split.fa' -min_len 200 -ns_max_p 10 -derep 12345 \
 -out_good {}'_split_prinseq' -seq_id {} -rm_header -out_bad null
 
-echo $sample_names | xargs -n 1 | xargs -P $ThreadN -I{} bwa64 index -p {} \
+echo $sample_names | xargs -n 1 | xargs -P $ThreadN -I{} ${DeconSeq}/bwa64 index -p {} \
 -a bwtsw {}'_split_prinseq.fasta'
 
 

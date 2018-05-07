@@ -24,7 +24,7 @@
 ## De novo Assemble Genome
 ##### Set the environment to add required programs to PATH
 ```
-set_path.sh
+set -a ; source ./paths.txt ; set +a
 ```
 
 ##### Assemble genome using MaSuRCA approach

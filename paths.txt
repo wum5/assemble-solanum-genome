@@ -1,0 +1,35 @@
+## This file will provide the pipeline with dependent programs.
+## You can leave the respective paths empty if programs are accessible through ENV (i.e. exported to .bashrc)
+## If you specify a path, please make sure that the required program(s) is directly contained in that path but not in any child directories.
+## e.g. BLAST+=/opt/software/BLAST+/2.2.30--GCC-4.4.5/bin/
+
+
+### Genome Assembly
+MaSuRCA=  # PATH to masucra binary files
+
+
+### Remove Contaminants by DeconSeq
+DeconSeq=    # PATH to deconseq
+PrinSeq=     # PATH to prinseq
+
+
+### required programs for building species-specific repeats library
+MiteHunter=    # PATH to mite-hunter 
+LtrHarvest=    # PATH to ltr-harvest
+LtrRetriever=    # PATH to ltr-retriever
+CrlScripts=   # PATH to CRL scripts used for repeat annotation
+RepeatMasker=    # PATH to repeatmasker
+RepeatModeler=   # PATH to repeatmodeler
+Blast=   # PATH to blast 
+ProtExcluder=   # PATH to ProtExcluder
+
+
+### Predict gene models by MAKER2
+Bowtie=   # PATH to Bowtie2
+Tophat=	  # PATH to Tophat2
+Trinity=    # PATH to Trinity
+Maker=    # PATH to Maker binary directory
+BUSCO=  # PATH to Busco Script
+Augustus=  # PATH to Augustus binary directory
+GeneMark=  # PATH to GeneMark gmes_petap
+SNAP=  # PATH to GeneMark gmes_petap

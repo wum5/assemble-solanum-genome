@@ -6,8 +6,8 @@ set -o pipefail
 
 function usage(){
 printf "\nDescription: this script is to predict gene models from assembled genome using \
-MAKER2 pipeline. You must ensure the follwing program has been correctly installed and added \
-to the PATH: Bowtie2, Tophat2, Trinity, Maker2, Busco, Augustus, and GeneMark, Blast+, Hmmer. 
+MAKER2 pipeline. You must ensure the follwing program has been correctly installed and set \
+to the path file: Bowtie2, Tophat2, Trinity, Maker2, Busco, Augustus, and GeneMark, Blast+, Hmmer. 
 
 $(basename "$0") [-h] [-OPTIONS] -d <working dir> -g <genome file> -f <forward rna seq> \
 -r <reverse rna seq> -p <homologous protein sequences> -t <TE proteins> -R <repeat library> \
@@ -112,7 +112,7 @@ sed -i "s|^\($TARGET_KEY\s*=\).*\$|\1$REPLACEMENT_VALUE|" $CONFIGFILE
 ############ Train Augustus ############
 if [[ $ProcStep = *"1"* ]]; 
 then
-	run_BUSCO.py -i $GENOME -o my_busco -l $BUSCODB -m genome -c $ThreadN -f
+	${BUSCO}/run_BUSCO.py -i $GENOME -o my_busco -l $BUSCODB -m genome -c $ThreadN -f
 	cd run_my_busco/augustus_output
 	
 	sed -i "s/$(basename *_parameters.pbl _parameters.pbl)/${SpeciesID}/g" *
@@ -126,7 +126,7 @@ then
 			
 	cd ..
 	cp retraining_parameters $SpeciesID
-	cp $SpeciesID "${AUGUSTUS_CONFIG_PATH}/species/${SpeciesID}"
+	cp $SpeciesID "${Augustus}/../config/species/${SpeciesID}"
 	cd ..
 fi
 
@@ -137,11 +137,11 @@ then
 	if [ ! -d run_my_genemark ]; then mkdir run_my_genemark; fi
 	cd run_my_genemark
 	
-	bowtie2-build $GENOME $Gindex
-	tophat2 -p $ThreadN $Gindex $RNAseq1 $RNAseq2
+	${Bowtie}/bowtie2-build $GENOME $Gindex
+	${Tophat}/tophat2 -p $ThreadN $Gindex $RNAseq1 $RNAseq2
 
-	bet_to_gff.pl --bed tophat_out/junctions.bed --gff introns.gff --label Tophat2
-	gmes_petap.pl --sequence $GENOME --ET introns.gff --cores $ThreadN 
+	${GeneMark}/bet_to_gff.pl --bed tophat_out/junctions.bed --gff introns.gff --label Tophat2
+	${GeneMark}/gmes_petap.pl --sequence $GENOME --ET introns.gff --cores $ThreadN 
 	
 	cp output/gmhmm.mod ../gmhmm.mod
 	cd ..
@@ -154,13 +154,13 @@ then
 	if [ ! -d run_my_snap ]; then mkdir run_my_snap; fi
 	cd run_my_snap
 	
-	Trinity --seqType fq --max_memory 64G --CPU $ThreadN --full_cleanup \
+	${Trinity}/Trinity --seqType fq --max_memory 64G --CPU $ThreadN --full_cleanup \
 	--output $Gindex --left $RNAseq1 --right $RNAseq2
 	
 	genome_stat.py -i ${GENOME} 
 	
-	maker -OPTS
-	maker -BOPTS
+	${Maker}/maker -OPTS
+	${Maker}/maker -BOPTS
 	cp ${MAKEREXE} "$( pwd )"/maker_exe.ctl
 	
 	set_config maker_opts.ctl "genome" "$( pwd )"/large_scaffolds.fa
@@ -174,42 +174,42 @@ then
 	set_config maker_opts.ctl "single_exon" "1"
 	set_config maker_opts.ctl "model_org" ""	
 	
-	mpiexec -n $ThreadN maker -base snap1
+	mpiexec -n $ThreadN ${Maker}/maker -base snap1
 	
 	cd snap1.maker.output
- 	gff3_merge -d snap1_master_datastore_index.log
- 	maker2zff snap1.all.gff
-	fathom -categorize 1000 genome.ann genome.dna
-	fathom -export 1000 -plus uni.ann uni.dna
-	forge export.ann export.dna
-	hmm-assembler.pl snap . > ../snap1.hmm	
+ 	${Maker}/gff3_merge -d snap1_master_datastore_index.log
+ 	${Maker}/maker2zff snap1.all.gff
+	${SNAP}/fathom -categorize 1000 genome.ann genome.dna
+	${SNAP}/fathom -export 1000 -plus uni.ann uni.dna
+	${SNAP}/forge export.ann export.dna
+	${SNAP}/hmm-assembler.pl snap . > ../snap1.hmm	
 	
 	cd ..
 	set_config maker_opts.ctl "snaphmm" "$( pwd )"/snap1.hmm
 	set_config maker_opts.ctl "est2genome" "0"
 	set_config maker_opts.ctl "protein2genome" "0" 		
  	
- 	mpiexec -n $ThreadN maker -base snap2
+ 	mpiexec -n $ThreadN ${Maker}/maker -base snap2
  	
  	cd snap2.maker.output
- 	gff3_merge -d snap2_master_datastore_index.log
- 	maker2zff snap2.all.gff
-	fathom -categorize 1000 genome.ann genome.dna
-	fathom -export 1000 -plus uni.ann uni.dna
-	forge export.ann export.dna
-	hmm-assembler.pl snap . > ../snap2.hmm	
+ 	${Maker}/gff3_merge -d snap2_master_datastore_index.log
+ 	${Maker}/maker2zff snap2.all.gff
+	${SNAP}/fathom -categorize 1000 genome.ann genome.dna
+	${SNAP}/fathom -export 1000 -plus uni.ann uni.dna
+	${SNAP}/forge export.ann export.dna
+	${SNAP}/hmm-assembler.pl snap . > ../snap2.hmm	
 		
 	cd ..
 	set_config maker_opts.ctl "snaphmm" "$( pwd )"/snap2.hmm	
- 	mpiexec -n $ThreadN maker -base snap3
+ 	mpiexec -n $ThreadN ${Maker}/maker -base snap3
  	
  	cd snap3.maker.output
- 	gff3_merge -d snap3_master_datastore_index.log
- 	maker2zff snap3.all.gff
-	fathom -categorize 1000 genome.ann genome.dna
-	fathom -export 1000 -plus uni.ann uni.dna
-	forge export.ann export.dna
-	hmm-assembler.pl snap . > ../snap3.hmm	
+ 	${Maker}/gff3_merge -d snap3_master_datastore_index.log
+ 	${Maker}/maker2zff snap3.all.gff
+	${SNAP}/fathom -categorize 1000 genome.ann genome.dna
+	${SNAP}/fathom -export 1000 -plus uni.ann uni.dna
+	${SNAP}/forge export.ann export.dna
+	${SNAP}/hmm-assembler.pl snap . > ../snap3.hmm	
 	
 	cd ..
 	cp snap3.hmm ../snap3.hmm
@@ -231,11 +231,11 @@ then
 	set_config maker_opts.ctl "min_protein" "30"
 	set_config maker_opts.ctl "alt_splice" "1"	
  	
- 	mpiexec -n $ThreadN maker 
+ 	mpiexec -n $ThreadN ${Maker}/maker 
  	
  	cd ${Gindex}".maker.output"
- 	gff3_merge -d ${Gindex}"_master_datastore_index.log"
- 	fasta_merge -d ${Gindex}"_master_datastore_index.log"
+ 	${Maker}/gff3_merge -d ${Gindex}"_master_datastore_index.log"
+ 	${Maker}/fasta_merge -d ${Gindex}"_master_datastore_index.log"
 	cd ..
 fi
 
