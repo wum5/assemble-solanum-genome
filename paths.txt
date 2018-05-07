@@ -30,4 +30,6 @@ Maker=    # PATH to Maker binary directory
 BUSCO=  # PATH to Busco Script
 Augustus=  # PATH to Augustus binary directory
 GeneMark=  # PATH to GeneMark gmes_petap
-SNAP=  # PATH to GeneMark gmes_petap
+SNAP=  # PATH to SNAP
+
+
