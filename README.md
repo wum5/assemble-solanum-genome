@@ -36,6 +36,12 @@ masurca masurca_config.txt   # need to manually edit "masurca_config" before to 
 assemble.sh
 ```
 
+##### Assemble genome using Canu-SMARTdenovo approach
+```
+canu_smartdenovo_assembly.sh -d <working dir> -P <PacBio reads> \
+-I <library file showing Illumina data info> -p <prefix> -n 24 -S 123456
+```
+
 ##### Build contaminant databases (skip this step if you have deconseq databases being set)
 ```
 contaminants_dbbuild.sh -d <working dir> -n 16   # need to manually edit "DeconSeqConfig.pm" then
